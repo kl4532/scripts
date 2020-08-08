@@ -16,10 +16,10 @@
             position:absolute;
             padding:0;
             margin:0;
-        
+
             top:0;
             left:0;
-        
+
             width: 100%;
             height: 100%;
             background:rgb(96, 96, 96);
@@ -38,16 +38,17 @@
         'use strict';
 
         // if day in ls differ from current day, clear ls
-        if(fbVisits && fbVisits.date !== today) {
-            localStorage.clear();
+        if(fbVisits && fbVisits.date !== today ||
+            fbVisits.totd !== getTimeOfTheDay()) {
+                setInit();
         }
 
-        // if no records in ls -> create new; 
+        // if no records in ls -> create new;
         // if record exist check if limit crossed if not increase visits, if yes -> block page
         if(!localStorage.getItem('fbVisits')) {
             setInit();
             increased = 1;
-        } else { 
+        } else {
             if(isAllowed(fbVisits, limit)) {
                 increased = JSON.parse(localStorage.getItem('fbVisits')).visits + 1;
                 localStorage.setItem('fbVisits', JSON.stringify({"visits": increased, "totd": getTimeOfTheDay(), "date": today}));
@@ -62,7 +63,7 @@
         // console.log(getTimeOfTheDay(), fbVisits.totd);
         if(fbVisits.visits >= limit && getTimeOfTheDay() === fbVisits.totd) {
             return false;
-        } 
+        }
         return true;
     }
 
@@ -86,11 +87,11 @@
     function getTimeOfTheDay() {
         const hour = new Date().getHours();
         let time ="";
-        if(0 <= hour && hour <= 12){
+        if(0 <= hour && hour < 12){
             time ="morning";
-        } else if (12 < hour && hour <= 20) {
+        } else if (12 <= hour && hour <= 19) {
             time ="afternoon";
-        } else if (20 < hour && hour <= 24) {
+        } else if (20 <= hour && hour <= 23) {
             time = "evening";
         }
         return time;
