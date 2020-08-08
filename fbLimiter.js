@@ -38,10 +38,12 @@
         'use strict';
 
         // if day in ls differ from current day, clear ls
-        if(fbVisits && fbVisits.date !== today ||
-            fbVisits.totd !== getTimeOfTheDay()) {
+        if(fbVisits) {
+            if(fbVisits.date !== today || fbVisits.totd !== getTimeOfTheDay()) {
                 setInit();
+            }
         }
+
 
         // if no records in ls -> create new;
         // if record exist check if limit crossed if not increase visits, if yes -> block page
