@@ -1,4 +1,4 @@
-    // ==UserScript==
+// ==UserScript==
     // @name         New Userscript
     // @namespace    http://tampermonkey.net/
     // @version      0.1
@@ -11,18 +11,22 @@
 
     GM_addStyle ( `
         .overlay {
+            width: 100%;
+            height: 100%;
+            position:absolute;
+            background-color: black;
+            background-image:url(https://www.innerfreedomyoga.com/wp-content/uploads/2017/01/sitting-in-nature.jpg);
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+        .overlay > p {
             color: white;
             font-size: 40px;
             position:absolute;
             padding:0;
             margin:0;
-
-            top:0;
-            left:0;
-
-            width: 100%;
-            height: 100%;
-            background:rgb(96, 96, 96);
+            top:40%;
+            left:35%;
         }
     ` );
 
@@ -31,17 +35,28 @@
     const fbVisits = JSON.parse(localStorage.getItem('fbVisits'));
 
     //Settings
-    const limit = 3;
+    // how many times user can visit site before it will be locked
+    const limit = 1;
     const user = "Corny";
-
+    // Multiple mode - means limit count is cleared not daily, but three times a day: at 0:00, 12:00 and 20:00
+    const multiple = true;
     (function() {
         'use strict';
 
-        // if day in ls differ from current day, clear ls
+        // reseting records
         if(fbVisits) {
-            if(fbVisits.date !== today || fbVisits.totd !== getTimeOfTheDay()) {
-                setInit();
+            if(multiple) {
+                // if day in ls(local storage) differ from current day OR time of a day differ, reset ls
+                if(fbVisits.date !== today || fbVisits.totd !== getTimeOfTheDay()) {
+                    setInit();
+                }
+            } else {
+                // if day in ls(local storage) differ from current day, reset ls
+                if(fbVisits.date !== today) {
+                    setInit();
+                }
             }
+
         }
 
 
@@ -61,8 +76,8 @@
     })();
 
     function isAllowed(fbVisits, limit) {
-        // console.log(fbVisits.visits, limit);
-        // console.log(getTimeOfTheDay(), fbVisits.totd);
+        console.log(fbVisits.visits, limit);
+        console.log(getTimeOfTheDay(), fbVisits.totd);
         if(fbVisits.visits >= limit && getTimeOfTheDay() === fbVisits.totd) {
             return false;
         }
@@ -75,7 +90,10 @@
             e.innerHTML = "";
             let div = document.createElement('div');
             div.className = "overlay";
-            div.innerHTML = `Come back later ${user} ;)`;
+            let p = document.createElement('p');
+            p.innerHTML = `Come back later <br> ${user} ;)`;
+
+            div.append(p);
             // document.append(body);
             document.body.append(div);
         },1)
