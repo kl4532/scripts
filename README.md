@@ -8,3 +8,6 @@ Limits visits on facebook to 3 per each time of the day:
 - evening 20-0
 
 So user can have maximum 9 visits on site per day. Can be customized easily.
+
+### gmailPicsDownload
+Downloads all pictures from selected email on Gmail
